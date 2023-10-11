@@ -14,6 +14,7 @@ int suma(int a, int b);
 int resta(int a, int b);
 int multiplicacion(int a, int b);
 double division(int a, int b);
+double euler(int a);
 
 int main(void)
 {
@@ -117,6 +118,24 @@ int main(void)
 	res = factorial_rec(a);
 
         printf("%d\n", res);
+      }
+      
+      break;
+    }
+    case 'e':
+    {
+      printf("Introduce un valor: ");
+      scanf("%d", &a);
+      
+      if(a < 0)
+      {
+	printf("Debes introducir un valor positivo...\n");
+      }
+      else
+      {
+	resDec = euler(a);
+
+        printf("%f\n", resDec);
       }
       
       break;
@@ -263,4 +282,30 @@ double division(int a, int b)
   double res = (double)a / (double)b;
 
   return res;
+}
+
+double euler(int a)
+{
+  // definicion de entero res y doubles res2 y e
+  int res = 0;
+  double res2 = 0;
+  int i = 0;
+  double e = 0;
+
+  // para todos los valores de el numero dado hasta 0
+  for(i = a; i >= 0; i--)
+  {
+    // guardar el factorial de a en res
+    res = factorial(i);
+
+    // dividir 1/res usando cast para cambiar res de entero a double y guardarlo en res2
+    res2 = 1/(double)res;
+
+    // sumar a e res2
+    e = e + res2;
+    //  restarle 1 a a
+  }
+
+  // regresa e
+  return e;
 }
