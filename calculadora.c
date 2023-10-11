@@ -8,6 +8,7 @@ Salidas: su función
 
 void leer_arreglo(int arr[]);
 int sumar_arreglo(int arr[]);
+int factorial_rec(int a);
 int factorial(int a);
 int suma(int a, int b);
 int resta(int a, int b);
@@ -102,6 +103,24 @@ int main(void)
       
       break;
     }
+    case 'F':
+    {
+      printf("Introduce un valor: ");
+      scanf("%d", &a);
+      
+      if(a < 0)
+      {
+	printf("Debes introducir un valor positivo...\n");
+      }
+      else
+      {
+	res = factorial_rec(a);
+
+        printf("%d\n", res);
+      }
+      
+      break;
+    }
     // si se escoje a, se sumaran 10 numeros usando arreglos
     case 'a':
     {
@@ -170,13 +189,13 @@ int sumar_arreglo(int arr[])
   return res;
 }
 
-// Función factorial:
+// Función factorial_rec:
 /*
-Esta función recibe un número y saca su factorial
+Esta función recibe un número y saca su factorial usando recursion
 Entradas: un numero entero positivo
 Salidas: el factorial del número entero
 */
-int factorial(int a)
+int factorial_rec(int a)
 {
   int res = 0;
 
@@ -186,10 +205,42 @@ int factorial(int a)
   }
   else
   {
-    res = factorial(a - 1);
+    res = factorial_rec(a - 1);
 
     return a * res;
   }
+}
+
+// Función factorial:
+/*
+Esta función recibe un número y saca su factorial
+Entradas: un numero entero positivo
+Salidas: el factorial del número entero
+*/
+int factorial(int a)
+{
+    // definir res como 1
+    int res = 1;
+    int i = 0;
+
+    // si el valor dado no es 0
+    if(a != 0)
+    {
+      /*
+	Al momento de usar un for, es recomendable asignarle a otra variable el valor que se resta, en este caso, por si es necesario usar más adelante el valor del usuario
+      */
+      
+        // para todos los valores desde el numero dado a 1
+        for(i = a; i > 0; i--)
+        {
+	    // multiplicar res por el valor dado
+    	    res = res * i;
+	    // restar 1 al valor dado
+        }
+    }
+
+    // regresar res
+    return res;
 }
 
 int suma(int a, int b)
