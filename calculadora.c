@@ -1,19 +1,28 @@
 #include <stdio.h>
 
 /*
-Este programa solicita al usuario un operador matemático e indica que es lo que hace
-Entradas: un caracter
+Este programa solicita al usuario un operador matemático y realiza la operación solicitada
+Entradas: un caracter y 2 enteros
 Salidas: su función
 */
 
 void leer_arreglo(int arr[]);
 int sumar_arreglo(int arr[]);
+int factorial(int a);
+int suma(int a, int b);
+int resta(int a, int b);
+int multiplicacion(int a, int b);
+double division(int a, int b);
 
 int main(void)
 {
 // definir operar
   char operar = 0;
+  int a = 0;
+  int b = 0;
+  
   int res = 0;
+  double resDec = 0;
   int nums[10];
 
 // guardar el valor del usuario en operar
@@ -25,22 +34,72 @@ int main(void)
   {
     case '+':
     {
-      printf("Suma\n");
+      printf("Introduce un valor: ");
+      scanf("%d", &a);
+      
+      printf("Introduce otro valor: ");
+      scanf("%d", &b);
+      
+      res = suma(a, b);
+
+      printf("%d\n", res);
       break;
     }
     case '-':
     {
-      printf("Resta\n");
+      printf("Introduce un valor: ");
+      scanf("%d", &a);
+      
+      printf("Introduce otro valor: ");
+      scanf("%d", &b);
+      
+      res = resta(a, b);
+      
+      printf("%d\n", res);
       break;
     }
     case '*':
     {
-      printf("Multiplicacion\n");
+      printf("Introduce un valor: ");
+      scanf("%d", &a);
+      
+      printf("Introduce otro valor: ");
+      scanf("%d", &b);
+      
+      res = multiplicacion(a, b);
+      
+      printf("%d\n", res);
       break;
     }
     case '/':
     {
-      printf("Division\n");
+      printf("Introduce un valor: ");
+      scanf("%d", &a);
+      
+      printf("Introduce otro valor: ");
+      scanf("%d", &b);
+      
+      resDec = division(a, b);
+      
+      printf("%f\n", resDec);
+      break;
+    }
+    case 'f':
+    {
+      printf("Introduce un valor: ");
+      scanf("%d", &a);
+      
+      if(a < 0)
+      {
+	printf("Debes introducir un valor positivo...\n");
+      }
+      else
+      {
+	res = factorial(a);
+
+        printf("%d\n", res);
+      }
+      
       break;
     }
     // si se escoje a, se sumaran 10 numeros usando arreglos
@@ -108,5 +167,49 @@ int sumar_arreglo(int arr[])
     }
 
   // reglresar res
+  return res;
+}
+
+// Función factorial:
+/*
+Esta función recibe un número y saca su factorial
+Entradas: un numero entero positivo
+Salidas: el factorial del número entero
+*/
+int factorial(int a)
+{
+  int res = 0;
+
+  if(a == 0)
+  {
+    return 1;
+  }
+  else
+  {
+    res = factorial(a - 1);
+
+    return a * res;
+  }
+}
+
+int suma(int a, int b)
+{
+  return a + b;
+}
+
+int resta(int a, int b)
+{
+  return a - b;
+}
+
+int multiplicacion(int a, int b)
+{
+  return a * b;
+}
+
+double division(int a, int b)
+{
+  double res = (double)a / (double)b;
+
   return res;
 }
