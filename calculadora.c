@@ -1,5 +1,8 @@
 #include <stdio.h>
 
+// libreria de funciones matemáticas, necesita encadenar de una manera diferente: gcc -o <destino> <origen> -lm
+#include <math.h>
+
 /*
 Este programa solicita al usuario un operador matemático y realiza la operación solicitada
 Entradas: un caracter y 2 enteros
@@ -7,6 +10,7 @@ Salidas: su función
 */
 
 void leer_arreglo(int arr[]);
+void eq_cuadr(double a, double b, double c, double *r1, double *r2);
 int sumar_arreglo(int arr[]);
 int factorial_rec(int a);
 int factorial(int a);
@@ -20,12 +24,18 @@ int main(void)
 {
 // definir operar
   char operar = 0;
+  
+// numeros a operar
+  int nums[10];
+
   int a = 0;
   int b = 0;
-  
+
+  double v1 = 0, v2 = 0, v3 = 0, res1 = 0, res2 = 0;
+
+// resultados
   int res = 0;
   double resDec = 0;
-  int nums[10];
 
 // guardar el valor del usuario en operar
   printf("Introduce un operador matematico: ");
@@ -152,6 +162,27 @@ int main(void)
 
       printf("El resultado de la suma es %d\n", res);
 
+      break;
+    }
+    case 'c':
+    {
+      printf("Dame a: ");
+      scanf("%lf", &v1);
+
+      printf("Dame b: ");
+      scanf("%lf", &v2);
+
+      printf("Dame c: ");
+      scanf("%lf", &v3);
+
+      // %p imprime una dirección de memoria, & es usado para referirse al espacio de memoria del elemento
+      printf("%p\n", &res1);
+
+      // se pasa la dirección de memoria de res1 y res2
+      eq_cuadr(v1, v2, v3, &res1, &res2);
+
+      printf("%lf\n", res1);
+      printf("%lf\n", res2);
       break;
     }
 // si no está la acción, regresa error
@@ -308,4 +339,20 @@ double euler(int a)
 
   // regresa e
   return e;
+}
+
+// al dar el tipo de variable al lado del apuntador, se declara el apuntador, ej: int *nombre
+// si no viene el tipo, se habla del contenido del apuntador
+// si intentas cambiar el apuntador sin el * salta error al compilar porque se intenta modificar la dirección de memoria
+
+void eq_cuadr(double a, double b, double c, double *r1, double *r2)
+{
+  // se modifica el valor de la dirección de memoria a la que apunta el apuntador
+  *r1 = (-b + sqrt(b * b - 4 * a * c)) / (2 * a);
+  *r2 = (-b - sqrt(b * b - 4 * a * c)) / (2 * a);
+
+  // como r1 es un apuntador, al imprimirlo como espacio de memoria, imprime el espacio de memoria al que apunta, que en este caso es el mismo que res1
+  printf("%p\n", r1);
+
+  return;
 }
