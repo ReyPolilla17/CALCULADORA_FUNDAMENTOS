@@ -4,13 +4,14 @@
 #include <math.h>
 
 /*
-Este programa solicita al usuario un operador matemático y realiza la operación solicitada
-Entradas: un caracter y 2 enteros
-Salidas: su función
+  Este programa solicita al usuario un operador matemático y realiza la operación solicitada
+  Entradas: un caracter y 2 enteros
+  Salidas: su función
 */
 
 void leer_arreglo(int arr[]);
 void eq_cuadr(double a, double b, double c, double *r1, double *r2);
+void circulo_esfera(double r, int p, double *peri, double *area, double *vol);
 int sumar_arreglo(int arr[]);
 int factorial_rec(int a);
 int factorial(int a);
@@ -19,29 +20,37 @@ int resta(int a, int b);
 int multiplicacion(int a, int b);
 double division(int a, int b);
 double euler(int a);
+int fibonacci(int valor, int meta);
+int fibonacci_hasta(int valor);
+double pi (int valor);
 
 int main(void)
 {
-// definir operar
+  // definir operar
   char operar = 0;
   
-// numeros a operar
+  // numeros a operar
   int nums[10];
 
   int a = 0;
   int b = 0;
 
-  double v1 = 0, v2 = 0, v3 = 0, res1 = 0, res2 = 0;
+  double v1 = 0; 
+  double v2 = 0;
+  double v3 = 0;
+  double res1 = 0;
+  double res2 = 0;
+  double res3 = 0;
 
-// resultados
+  // resultados
   int res = 0;
   double resDec = 0;
 
-// guardar el valor del usuario en operar
+  // guardar el valor del usuario en operar
   printf("Introduce un operador matematico: ");
   scanf("%c", &operar);
 
-// determinar la acción que realiza el caracter
+  // determinar la acción que realiza el caracter
   switch(operar)
   {
     case '+':
@@ -103,11 +112,11 @@ int main(void)
       
       if(a < 0)
       {
-	printf("Debes introducir un valor positivo...\n");
+	      printf("Debes introducir un valor positivo...\n");
       }
       else
       {
-	res = factorial(a);
+      	res = factorial(a);
 
         printf("%d\n", res);
       }
@@ -121,13 +130,55 @@ int main(void)
       
       if(a < 0)
       {
-	printf("Debes introducir un valor positivo...\n");
+	      printf("Debes introducir un valor positivo...\n");
       }
       else
       {
-	res = factorial_rec(a);
+	      res = factorial_rec(a);
 
         printf("%d\n", res);
+      }
+      
+      break;
+    }
+    case 'i':
+    {
+      printf("Introduce un valor: ");
+      scanf("%d", &a);
+
+      if(a < 0)
+      {
+	      printf("Debes introducir un valor positivo...\n");
+      }
+      else
+      {
+	      b = fibonacci(0, a);
+
+	      printf("El numero en f(%d) es %d\n", a, b);
+      }
+      
+      break;
+    }
+    case 'p':
+    {
+      printf("Introduce un valor: ");
+      scanf("%d", &a);
+
+      if(a < 0)
+      {
+	      printf("Debes introducir un valor positivo...\n");
+      }
+      else if(a % 2 == 0)
+      {
+	      printf("Debes introducir un numero non...\n");
+      }
+      else
+      {
+	      res1 = pi(a);
+
+        // el formato %1.30f imprime un valor flotante usando hasta un valor entero y 30 valores decimales
+        // siendo el valor antes del punto la cantidad de valores enteros y desues del punto la cantidad de valores decimales
+        printf("Pi evaluado hasta %d es %1.30f\n", a, res1);
       }
       
       break;
@@ -139,11 +190,11 @@ int main(void)
       
       if(a < 0)
       {
-	printf("Debes introducir un valor positivo...\n");
+	      printf("Debes introducir un valor positivo...\n");
       }
       else
       {
-	resDec = euler(a);
+	      resDec = euler(a);
 
         printf("%f\n", resDec);
       }
@@ -185,7 +236,35 @@ int main(void)
       printf("%lf\n", res2);
       break;
     }
-// si no está la acción, regresa error
+    case 'v':
+    {
+      printf("Introduce un valor: ");
+      scanf("%lf", &v1);
+
+      printf("Introduce el valor al que evaluar pi: ");
+      scanf("%d", &a);
+
+      if(a < 0)
+      {
+	      printf("Debes introducir un valor positivo...\n");
+      }
+      else if(a % 2 == 0)
+      {
+	      printf("Debes introducir un numero non...\n");
+      }
+      else
+      {
+	circulo_esfera(v1, a, &res1, &res2, &res3);
+
+             printf("Area: %lf\n", res1);
+             printf("Perimetro: %lf\n", res2);
+             printf("Volumen: %lf\n", res3);	      
+      }
+
+      
+      break;
+    }
+    // si no está la acción, regresa error
     default:
     {
       printf("Operador desconocido...\n");
@@ -354,5 +433,125 @@ void eq_cuadr(double a, double b, double c, double *r1, double *r2)
   // como r1 es un apuntador, al imprimirlo como espacio de memoria, imprime el espacio de memoria al que apunta, que en este caso es el mismo que res1
   printf("%p\n", r1);
 
+  return;
+}
+
+/*
+Desarrolla la secuencia de fibonacci hasta el valor indicado y regresa el último valor generado
+@param valor -  la cantidad de veces que se realizará la secuencia fibonacci
+@param meta  -  la cantidad de veces que se desea repetir la secuencia
+@return      -  el ultimo valor que se haya impreso en la última vuelta de la función
+
+@example fibonacci(6)
+
+0
+0 1 
+0 1 1 
+0 1 1 2 
+0 1 1 2 3 
+0 1 1 2 3 5 
+0 1 1 2 3 5 8 
+
+con un valor de retorno 8
+*/
+int fibonacci(int valor, int meta)
+{
+  // guardar el ultimo valor de la secuencia fibonacci hasta el valor indicado
+  int final = fibonacci_hasta(valor);
+
+  // si no se ha llegado 
+  if(valor != meta)
+  {
+    // sumar 1 a valor
+    valor++;
+    // guardar el resultado de la función en inicial usando el nuevo valor
+    final = fibonacci(valor, meta);
+  }
+
+  // se regresa el valor alojado en inicial
+  return final;
+}
+
+/*
+Imprimirá realizará una secuencia fibonacci la cantidad de veces indicada
+@param valor - la cantidad de veces que debe realizarse la secuencia fibonacci
+@return el ultimo valor de la secuencia generado
+
+@example fibonaccia_hasta(6)
+0 1 1 2 3 5 8 
+
+con un valor de retorno 8
+*/
+int fibonacci_hasta(int valor)
+{
+  // contador
+  int i = 0;
+
+  // los 2 primeros numeros de la secuencia
+  int inicial = 0;
+  int actual = 1;
+
+  // el valor resultante de la suma de los primeros 2 numeros
+  int siguiente = 0;
+
+  // imprimir el primer valor de la secuencia
+  printf("%d ", inicial);
+
+  // repetir mientras i sea menor a la cantidad de repeticiones a realizar
+  for(i = 0; i < valor; i++)
+  {
+    // imprimir el valor actual con un espacio
+    printf("%d ", actual);
+    
+    // el siguiente valor será igual al valor anterior mas el actual
+    siguiente = inicial + actual;
+
+    // se recorren los valores para la siguiente vuelta
+    inicial = actual;
+    actual = siguiente;
+  }
+
+  // imprimir salto de linea
+  printf("\n");
+
+  // regresar el valor de inicial
+  return inicial;
+}
+
+/*
+Evalua pi hasta un valor dado
+@param valor - el numero hasta el que evaluar pi
+
+@return el numero obtenido de la evaluación
+*/
+double pi(int valor)
+{
+  // contador y desición de la operación
+  int i = 0;
+  int operar = 1;
+
+  // lugar en el que guardar el resultado
+  double res = 0;
+
+  // mientras i sea menor o igual al valor dado
+  // operar se alterna entre 1 y -1, ya que la secuencia funciona de esa manera
+  for(i = 1; i <= valor; i += 2, operar *= -1)
+  {
+    // sumar al resultado 1/i*operar (como operar se va alternando, al final la suma se convierte en una resta al volver negarivo el valor dentro del parentesis)
+    res = res + ((1 / (double)i) * (double)operar);
+  }
+
+  // como el algoritmo anterior solo adquiere 1/4 de pi, regresa el valor multiplicado por 4
+  return res * 4;
+}
+
+void circulo_esfera(double r, int p, double *peri, double *area, double *vol)
+{
+  double num_pi = pi(p);
+  
+  *peri = (2 * r) * num_pi;
+  *area = (r * r) * num_pi;
+  *vol = (4/3) * (r * r * r) * num_pi;
+  
   return;
 }
