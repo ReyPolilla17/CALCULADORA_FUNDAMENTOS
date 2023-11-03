@@ -16,7 +16,7 @@ void leer_arreglo(int arr[]);
 int sumar_arreglo(int arr[]);
 void eq_cuadr(double a, double b, double c, double *r1, double *r2);
 void circulo_esfera(double r, int p, double *peri, double *area, double *vol);
-void estadistica(int arr[], int size, double *media, double *mediana, double *moda);
+void estadistica(int arr[], int size, double *media, double *mediana, int *moda);
 
 int main(void)
 {
@@ -185,11 +185,11 @@ int main(void)
     {
       leer_arreglo(nums);
 
-      estadistica(nums, 10, &res1, &res2, &res3);
+      estadistica(nums, 10, &res1, &res2, &a);
 
       printf("Media: %f\n", res1);
       printf("Mediana: %f\n", res2);
-      printf("Moda: %f\n", res3);
+      printf("Moda: %d\n", a);
       break;
     }
     // si no está la acción, regresa error
@@ -320,40 +320,72 @@ void circulo_esfera(double r, int p, double *peri, double *area, double *vol)
   return;
 }
 
-void estadistica(int arr[], int size, double *media, double *mediana, double *moda)
+void estadistica(int arr[], int size, double *media, double *mediana, int *moda)
 {
-  int i = 0;
-  int j = 0;
+    int valor_actual = 0;
+    int valor_reemplazar = 0;
 
-  int valor_actual = 0;
-  int valor_reemplazar = 0;
+    int i = 0;
+    int j = 0;
 
-  // para todos los elementos del arreglo
-  for(i = 0; i < size; i++)
-  {
-    // evaluar cada número del arreglo comenzando por el elemento i del arreglo + 1
-    for(j = i + 1; j < size; j++)
+    // acomoda los valores de mayor a menor
+    // para todos los elementos del arreglo
+    for(i = 0; i < size; i++)
     {
-      // definir el valor_actual como el elemento i del arreglo y valor_reemplazar por el elemento j del arreglo
-      valor_actual = arr[i];
-      valor_reemplazar = arr[j];
+        // evaluar cada número del arreglo comenzando por el elemento i del arreglo + 1
+        for(j = i + 1; j < size; j++)
+        {
+            // definir el valor_actual como el elemento i del arreglo y valor_reemplazar por el elemento j del arreglo
+            valor_actual = arr[i];
+            valor_reemplazar = arr[j];
 
-      // si el elemento i del arreglo es menor o igual al elemento j del arreglo
-      if(arr[i] <= arr[j])
-      {
-        // intercambiar los valores
-        arr[i] = valor_reemplazar;
-        arr[j] = valor_actual;
-      }
+            // si el elemento i del arreglo es menor o igual al elemento j del arreglo
+            if(arr[i] <= arr[j])
+            {
+                // intercambiar los valores
+                arr[i] = valor_reemplazar;
+                arr[j] = valor_actual;
+            }
+        }
     }
-  }
 
-  for(i = 0; i < size; i++)
-  {
-    *media += (double)arr[i];
-  }
+    // una vez acomodados, saca la dediana (el valor de en medio)
+    if(size % 2 != 0)
+    {
+        // si la cantidad de numeros no es par, saca el valor de en medio
+        *mediana = (double)arr[size / 2];
+    }
+    else
+    {
+        // si es par, saca el promedio de los dos valores de en medio
+        *mediana = (double)(arr[size / 2] + arr[(size / 2) - 1]) / 2;
+    }
 
-  *media /= (double)size;
+    // calcula la media (promedio) y moda a la vez
+    // reinicia valor_actual, valor_reemplazar y comienza con la moda siendo el primer elemento del arreglo
+    for(i = 0, valor_actual = 0, valor_reemplazar = 0, *moda = arr[0]; i < size; i++)
+    {
+        // suma cada elemento del arreglo
+        *media += arr[i];
 
-  return;
+        // si el valor que se esta evaluando es más grande que el valor actual más grande, lo reemplaza y la moda se cambia por el numero que se estpa evaluando
+        if(valor_reemplazar > valor_actual)
+        {
+            valor_actual = valor_reemplazar;
+            *moda = arr[i];
+        }
+
+        // cuneta cuantas veces se repite el numero en el arreglo|
+        for(j = i, valor_reemplazar = 0; j < size; j++)
+        {
+            if(arr[j] == arr[i])
+            {
+                valor_reemplazar ++;
+            }
+        }
+    }
+
+    *media /= (double)size;
+
+    return;
 }
