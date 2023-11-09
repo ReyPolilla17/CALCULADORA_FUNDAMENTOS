@@ -7,6 +7,18 @@
 // librería propia
 #include "mate.h"
 
+typedef struct
+{
+  char operacion;
+  double resultadoD1;
+  double resultadoD2;
+  double resultadoD3;
+  int resultadoI;
+  int operando1;
+  int operando2;
+  int operando3;
+} OPERACION;
+
 /*
   Este programa solicita al usuario un operador matemático y realiza la operación solicitada
   Entradas: un caracter y 2 enteros
@@ -14,6 +26,7 @@
 */
 
 int leer(char arr[], int *val, int mayorA, int divisible);
+int leerB(int mayorA, int divisible, int primero);
 void leer_arreglo(int arr[]);
 int sumar_arreglo(int arr[]);
 void eq_cuadr(double a, double b, double c, double *r1, double *r2);
@@ -21,9 +34,11 @@ void circulo_esfera(double r, int p, double *peri, double *area, double *vol);
 void estadistica(int arr[], int size, double *media, double *mediana, int *moda);
 
 int main(int argc, char *argv[])
-{ 
+{
   // numeros a operar
   int nums[10];
+
+  char operar = 0;
 
   int a = 0;
   int b = 0;
@@ -36,265 +51,304 @@ int main(int argc, char *argv[])
 
   int res = 0;
 
-  if(argc < 2)
+  int veces = 0;
+  OPERACION ultimas[10];
+  
+  int add = 1;
+  int i = 0;
+
+  while(1)
   {
-    printf("Debes introducir un operador matematico...\n");
-    return -1;
-  }
+    add = 1;
 
-  switch(argv[1][0])
-  {
-    case '+':
+    if(veces || argc < 2)
     {
-      if(argc != 4)
-      {
-        printf("Debes introducir 2 valores...\n");
-        break;
-      }
-
-      if(leer(argv[2], &a, -1, -1) != 0 || leer(argv[3], &b, -1, -1) != 0)
-      {
-        break;
-      }
-      
-      res = suma(a, b);
-
-      printf("%d\n", res);
-      break;
+      printf("Introduce un operador: ");
+      scanf("%c", &operar);
     }
-    case '-':
+    else
     {
-      if(argc != 4)
-      {
-        printf("Debes introducir 2 valores...\n");
-        break;
-      }
-
-      if(leer(argv[2], &a, -1, -1) != 0 || leer(argv[3], &b, -1, -1) != 0)
-      {
-        break;
-      }
-      
-      res = resta(a, b);
-      
-      printf("%d\n", res);
-      break;
+      sscanf(argv[1], "%c", &operar);
     }
-    case '*':
+    
+    if(veces > 9)
     {
-      if(argc != 4)
+      for(i = 1; i < 10; i++)
       {
-        printf("Debes introducir 2 valores...\n");
+        ultimas[i - 1] = ultimas[i];
+      }
+      veces--;
+    }
+
+    switch(operar)
+    {
+      case '+':
+      {
+        if(argc != 4 || veces)
+        {
+          a = leerB(-1, -1, 1);
+          b = leerB(-1, -1, 0);
+        }
+        else if(leer(argv[2], &a, -1, -1) != 0 || leer(argv[3], &b, -1, -1) != 0)
+        {
+          break;
+        }
+        
+        res = suma(a, b);
+
+        printf("%d\n", res);
         break;
       }
-
-      if(leer(argv[2], &a, -1, -1) != 0 || leer(argv[3], &b, -1, -1) != 0)
+      case '-':
+      {
+        if(argc != 4 || veces)
+        {
+          a = leerB(-1, -1, 1);
+          b = leerB(-1, -1, 0);
+        }
+        else if(leer(argv[2], &a, -1, -1) != 0 || leer(argv[3], &b, -1, -1) != 0)
+        {
+          break;
+        }
+        
+        res = resta(a, b);
+        
+        printf("%d\n", res);
+        break;
+      }
+      case '*':
+      {
+        if(argc != 4 || veces)
+        {
+          a = leerB(-1, -1, 1);
+          b = leerB(-1, -1, 0);
+        }
+        else if(leer(argv[2], &a, -1, -1) != 0 || leer(argv[3], &b, -1, -1) != 0)
+        {
+          break;
+        }
+        
+        res = multiplicacion(a, b);
+        
+        printf("%d\n", res);
+        break;
+      }
+      case '/':
+      {
+        if(argc != 4 || veces)
+        {
+          a = leerB(-1, -1, 1);
+          b = leerB(-1, -1, 0);
+        }
+        else if(leer(argv[2], &a, -1, -1) != 0 || leer(argv[3], &b, -1, -1) != 0)
+        {
+          break;
+        }
+        
+        res1 = division(a, b);
+        
+        printf("%f\n", res1);
+        break;
+      }
+      case 'f':
+      {
+        if(argc != 3 || veces)
+        {
+          a = leerB(0, -1, 1);
+        }
+        else if(leer(argv[2], &a, 0, -1) != 0)
         {
           break;
         }
       
-      res = multiplicacion(a, b);
-      
-      printf("%d\n", res);
-      break;
-    }
-    case '/':
-    {
-      if(argc != 4)
-      {
-        printf("Debes introducir 2 valores...\n");
-        break;
-      }
+        res = factorial(a);
 
-      if(leer(argv[2], &a, -1, -1) != 0 || leer(argv[3], &b, -1, -1) != 0)
-      {
+        printf("%d\n", res);
         break;
       }
-      
-      res1 = division(a, b);
-      
-      printf("%f\n", res1);
-      break;
-    }
-    case 'f':
-    {
-      if(argc != 3)
+      case 'F':
       {
-        printf("Debes introducir 1 valor...\n");
-        break;
-      }
+        if(argc != 3 || veces)
+        {
+          a = leerB(0, -1, 1);
+        }
+        else if(leer(argv[2], &a, 0, -1) != 0)
+        {
+          break;
+        }
+        
+        res = factorial_rec(a);
 
-      if(leer(argv[2], &a, 0, -1) != 0)
-      {
+        printf("%d\n", res);
         break;
       }
+      case 'i':
+      {
+        if(argc != 3 || veces)
+        {
+          a = leerB(0, -1, 1);
+        }
+        else if(leer(argv[2], &a, 0, -1) != 0)
+        {
+          break;
+        }
+
+        res = fibonacci(0, a);
+
+        printf("El numero en f(%d) es %d\n", a, res);
+        break;
+      }
+      case 'p':
+      {
+        if(argc != 3 || veces)
+        {
+          a = leerB(0, 2, 1);
+        }
+        else if(leer(argv[2], &a, 0, 2) != 0)
+        {
+          break;
+        }
+        
+        res1 = pi(a);
+
+        // el formato %1.30f imprime un valor flotante usando hasta un valor entero y 30 valores decimales
+        // siendo el valor antes del punto la cantidad de valores enteros y desues del punto la cantidad de valores decimales
+        printf("Pi evaluado hasta %d es %1.30f\n", a, res1);
+        break;
+      }
+      case 'e':
+      {
+        if(argc != 3 || veces)
+        {
+          a = leerB(0, -1, 1);
+        }
+        else if(leer(argv[2], &a, 0, -1) != 0)
+        {
+          break;
+        }
+        
+        res1 = euler(a);
+
+        printf("%f\n", res1);
+        break;
+      }
+      // si se escoje a, se sumaran 10 numeros usando arreglos
+      case 'a':
+      {
+        if(argc != 2 && !veces)
+        {
+          printf("No necesitas introducir nungun valor al inicio...\n");
+        }
+        // guardar 10 numeros
+        printf("Introduce 10 numeros:\n");
+        
+        leer_arreglo(nums);
+        // res será igual a la suma de los 10 numeros
+        res = sumar_arreglo(nums);
+
+        printf("El resultado de la suma es %d\n", res);
+
+        break;
+      }
+      case 'c':
+      {
+        if(argc != 5 || veces)
+        {
+          a = leerB(0, -1, 1);
+          b = leerB(0, -1, 0);
+          c = leerB(0, -1, 0);
+        }
+        else if(leer(argv[2], &a, 0, -1) != 0 || leer(argv[3], &b, 0, -1) != 0 || leer(argv[4], &c, 0, -1) != 0)
+        {
+          break;
+        }
+
+        // %p imprime una dirección de memoria, & es usado para referirse al espacio de memoria del elemento
+        printf("%p\n", &res1);
+
+        // se pasa la dirección de memoria de res1 y res2
+        eq_cuadr((double)a, (double)b, (double)c, &res1, &res2);
+
+        printf("%lf\n", res1);
+        printf("%lf\n", res2);
+        break;
+      }
+      case 'v':
+      {
+        if(argc != 4 || veces)
+        {
+          a = leerB(0, -1, 1);
+          
+          printf("Para evaluar pi:\n");
+          b = leerB(0, 2, 1);
+        }
+        else if(leer(argv[2], &a, 0, -1) != 0 || leer(argv[3], &b, 0, 2) != 0)
+        {
+          break;
+        }
+
+        circulo_esfera((double)a, b, &res1, &res2, &res3);
+
+        printf("Area: %lf\n", res1);
+        printf("Perimetro: %lf\n", res2);
+        printf("Volumen: %lf\n", res3);	      
+        break;
+      }
+      case 'm':
+      {
+        if(argc != 2 && !veces)
+        {
+          printf("No necesitas introducir nungun valor al inicio...\n");
+        }
+        // guardar 10 numeros
+        printf("Introduce 10 numeros:\n");
+
+        leer_arreglo(nums);
+
+        estadistica(nums, 10, &res1, &res2, &res);
+
+        printf("Media: %f\n", res1);
+        printf("Mediana: %f\n", res2);
+        printf("Moda: %d\n", res);
+        break;
+      }
+      // si no está la acción, regresa error
+      default:
+      {
+        printf("Operador desconocido...\n");
+        add = 0;
+        break;
+      }
+    }
     
-    	res = factorial(a);
-
-      printf("%d\n", res);
-      break;
-    }
-    case 'F':
+    if(add)
     {
-      if(argc != 3)
-      {
-        printf("Debes introducir 1 valor...\n");
-        break;
-      }
-
-      if(leer(argv[2], &a, 0, -1) != 0)
-      {
-        break;
-      }
-	    
-      res = factorial_rec(a);
-
-      printf("%d\n", res);
-      break;
+      ultimas[veces].operacion = operar;
+      ultimas[veces].resultadoD1 = res1;
+      ultimas[veces].resultadoD2 = res2;
+      ultimas[veces].resultadoD3 = res3;
+      ultimas[veces].resultadoI = res;
+      ultimas[veces].operando1 = a;
+      ultimas[veces].operando2 = b;
+      ultimas[veces].operando3 = c;
     }
-    case 'i':
+
+    printf("\n");
+
+    for(i = 0; i <= veces; i++)
     {
-      if(argc != 3)
-      {
-        printf("Debes introducir 1 valor...\n");
-        break;
-      }
-
-      if(leer(argv[2], &a, 0, -1) != 0)
-      {
-        break;
-      }
-
-	    res = fibonacci(0, a);
-
-	    printf("El numero en f(%d) es %d\n", a, res);
-      break;
+      printf("Operacion #%d \nTipo: %c \nOperandos: %d, %d, %d \nResultado int: %d \nResultados float: %lf, %lf, %lf\n\n", i, ultimas[i].operacion, ultimas[i].operando1, ultimas[i].operando2, ultimas[i].operando3, ultimas[i].resultadoI, ultimas[i].resultadoD1, ultimas[i].resultadoD2, ultimas[i].resultadoD3);
     }
-    case 'p':
-    {
-      if(argc != 3)
-      {
-        printf("Debes introducir 1 valor...\n");
-        break;
-      }
 
-      if(leer(argv[2], &a, 0, 2) != 0)
-      {
-        break;
-      }
-      
-	    res1 = pi(a);
+    a = 0;
+    b = 0;
+    c = 0;
+    res1 = 0;
+    res2 = 0;
+    res3 = 0;
+    res = 0;
 
-      // el formato %1.30f imprime un valor flotante usando hasta un valor entero y 30 valores decimales
-      // siendo el valor antes del punto la cantidad de valores enteros y desues del punto la cantidad de valores decimales
-      printf("Pi evaluado hasta %d es %1.30f\n", a, res1);
-      break;
-    }
-    case 'e':
-    {
-      if(argc != 3)
-      {
-        printf("Debes introducir 1 valor...\n");
-        break;
-      }
-
-      if(leer(argv[2], &a, 0, -1) != 0)
-      {
-        break;
-      }
-      
-	    res1 = euler(a);
-
-      printf("%f\n", res1);
-      break;
-    }
-    // si se escoje a, se sumaran 10 numeros usando arreglos
-    case 'a':
-    {
-      if(argc != 2)
-      {
-        printf("No debes introducir nungun valor...\n");
-        break;
-      }
-      // guardar 10 numeros
-      printf("Introduce 10 numeros:\n");
-      
-      leer_arreglo(nums);
-      // res será igual a la suma de los 10 numeros
-      res = sumar_arreglo(nums);
-
-      printf("El resultado de la suma es %d\n", res);
-
-      break;
-    }
-    case 'c':
-    {
-      if(argc != 5)
-      {
-        printf("Debes introducir 3 valores...\n");
-        break;
-      }
-
-      if(leer(argv[2], &a, 0, -1) != 0 || leer(argv[3], &b, 0, -1) != 0 || leer(argv[4], &c, 0, -1) != 0)
-      {
-        break;
-      }
-
-      // %p imprime una dirección de memoria, & es usado para referirse al espacio de memoria del elemento
-      printf("%p\n", &res1);
-
-      // se pasa la dirección de memoria de res1 y res2
-      eq_cuadr((double)a, (double)b, (double)c, &res1, &res2);
-
-      printf("%lf\n", res1);
-      printf("%lf\n", res2);
-      break;
-    }
-    case 'v':
-    {
-      if(argc != 4)
-      {
-        printf("Debes introducir 2 valores...\n");
-        break;
-      }
-
-      if(leer(argv[2], &a, 0, -1) != 0 || leer(argv[3], &b, 0, 2) != 0)
-      {
-        break;
-      }
-
-      circulo_esfera((double)a, b, &res1, &res2, &res3);
-
-      printf("Area: %lf\n", res1);
-      printf("Perimetro: %lf\n", res2);
-      printf("Volumen: %lf\n", res3);	      
-      break;
-    }
-    case 'm':
-    {
-      if(argc != 2)
-      {
-        printf("No debes introducir nungun valor...\n");
-        break;
-      }
-      // guardar 10 numeros
-      printf("Introduce 10 numeros:\n");
-
-      leer_arreglo(nums);
-
-      estadistica(nums, 10, &res1, &res2, &res);
-
-      printf("Media: %f\n", res1);
-      printf("Mediana: %f\n", res2);
-      printf("Moda: %d\n", res);
-      break;
-    }
-    // si no está la acción, regresa error
-    default:
-    {
-      printf("Operador desconocido...\n");
-      break;
-    }
+    veces++;
   }
 
   return 0;
@@ -321,6 +375,45 @@ int leer(char arr[], int *val, int mayorA, int divisible)
     return 0;
 }
 
+int leerB(int mayorA, int divisible, int primero)
+{
+  int num = 0;
+  int count = 0;
+
+  do
+  {
+    count = 0;
+
+    if(primero == 1)
+    {
+      printf("Introduce un numero: ");
+    }
+    else
+    {
+      printf("Introduce otro numero: ");
+    }
+
+    scanf("%d", &num);
+
+    if(num != -1 && num < mayorA)
+    {
+      printf("Debes introducir un valor mayor a %d...\n", mayorA);
+      count = 1;
+    }
+
+    if(divisible != -1 && num % divisible == 0)
+    {
+      printf("debes introducir un numero que no sea divisible entre %d...\n", divisible);
+      count = 1;
+    }
+  }
+  while(count != 0);
+
+  getchar();
+
+  return num;
+}
+
 /*
 Esta función leerá 10 numeros y los guardará en un arreglo
 Entradas: 10 numeros
@@ -333,11 +426,13 @@ void leer_arreglo(int arr[])
 
   // repetir 10 veces
   for(i = 0; i < 10; i++)
-    {
-      // pedir un numero y guardarlo en la siguiente posición
-      printf("Introduce un numero: ");
-      scanf("%d", &arr[i]);
-    }
+  {
+    // pedir un numero y guardarlo en la siguiente posición
+    printf("Introduce un numero: ");
+    scanf("%d", &arr[i]);
+  }
+
+  getchar();
 
   return;
 }
