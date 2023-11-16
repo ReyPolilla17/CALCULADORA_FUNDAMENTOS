@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 // libreria de funciones matemáticas, necesita encadenar de una manera diferente: gcc -o <destino> <origen> -lm
 #include <math.h>
@@ -54,6 +55,7 @@ int main(int argc, char *argv[])
   int veces = 0;
   OPERACION ultimas[10];
   
+  int reps = 0;
   int add = 1;
   int i = 0;
 
@@ -61,10 +63,11 @@ int main(int argc, char *argv[])
   {
     add = 1;
 
-    if(veces || argc < 2)
+    if(reps || argc < 2)
     {
       printf("Introduce un operador: ");
       scanf("%c", &operar);
+      getchar();
     }
     else
     {
@@ -312,6 +315,20 @@ int main(int argc, char *argv[])
         printf("Moda: %d\n", res);
         break;
       }
+      case 'h':
+      {
+        add = 0;
+        for(i = 0; i < veces; i++)
+        {
+          printf("\nOperacion #%d \nTipo: %c \nOperandos: %d, %d, %d \nResultado int: %d \nResultados float: %lf, %lf, %lf\n\n", i + 1, ultimas[i].operacion, ultimas[i].operando1, ultimas[i].operando2, ultimas[i].operando3, ultimas[i].resultadoI, ultimas[i].resultadoD1, ultimas[i].resultadoD2, ultimas[i].resultadoD3);
+        }
+        break;
+      }
+      case 's':
+      {
+        exit(0);
+        break;
+      }
       // si no está la acción, regresa error
       default:
       {
@@ -332,12 +349,9 @@ int main(int argc, char *argv[])
       ultimas[veces].operando2 = b;
       ultimas[veces].operando3 = c;
     }
-
-    printf("\n");
-
-    for(i = 0; i <= veces; i++)
+    else
     {
-      printf("Operacion #%d \nTipo: %c \nOperandos: %d, %d, %d \nResultado int: %d \nResultados float: %lf, %lf, %lf\n\n", i, ultimas[i].operacion, ultimas[i].operando1, ultimas[i].operando2, ultimas[i].operando3, ultimas[i].resultadoI, ultimas[i].resultadoD1, ultimas[i].resultadoD2, ultimas[i].resultadoD3);
+      veces --;
     }
 
     a = 0;
@@ -348,7 +362,8 @@ int main(int argc, char *argv[])
     res3 = 0;
     res = 0;
 
-    veces++;
+    veces ++;
+    reps ++;
   }
 
   return 0;
